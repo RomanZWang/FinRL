@@ -43,6 +43,12 @@ DEFAULT_DATA_COLUMNS = ["date", "tic", "close"]
 ## check https://pypi.org/project/stockstats/ for different names
 TECHNICAL_INDICATORS_LIST = ["macd","boll_ub","boll_lb","rsi_30", "cci_30", "dx_30","close_30_sma","close_60_sma"]
 
+# User defined features
+# Sentiment Data
+# 6 news categories
+# 2 scores
+NEWS_DATA_PATH = '/home/roman/Work/trading-bot/notebooks/article_df_sentiment_11.pkl'
+NUMBER_OF_USER_FEATURES = 6*2
 
 ## Model Parameters
 A2C_PARAMS = {"n_steps": 5, "ent_coef": 0.01, "learning_rate": 0.0007}
@@ -72,7 +78,7 @@ SRI_KEHATI_TICKER = [
 		"AALI.JK",
 		"ADHI.JK",
 		"ASII.JK",
-		"BBCA.JK", 
+		"BBCA.JK",
 		"BBNI.JK",
 		"BBRI.JK",
 		"BBTN.JK",
@@ -102,7 +108,6 @@ DOW_30_TICKER = [
     "AAPL",
     "MSFT",
     "JPM",
-    "V",
     "RTX",
     "PG",
     "GS",
@@ -1212,35 +1217,35 @@ CAC_40_TICKER = [
 
 # DAX 30 constituents at 2021/02
 DAX_30_TICKER = [
-	"DHER.DE", 
-	"RWE.DE", 
+	"DHER.DE",
+	"RWE.DE",
 	"FRE.DE",
 	"MTX.DE",
-	"MRK.DE", 
-	"LIN.DE", 
-	"ALV.DE", 
-	"VNA.DE", 
-	"EOAN.DE", 
-	"HEN3.DE", 
-	"DAI.DE", 
-	"DB1.DE", 
-	"DPW.DE", 
-	"DWNI.DE", 
-	"BMW.DE", 
-	"DTE.DE", 
-	"VOW3.DE", 
-	"MUV2.DE", 
-	"1COV.DE", 
-	"SAP.DE", 
-	"FME.DE", 
-	"BAS.DE", 
-	"BAYN.DE", 
-	"BEI.DE", 
-	"CON.DE", 
-	"SIE.DE", 
-	"ADS.DE", 
-	"HEI.DE", 
-	"DBK.DE", 
+	"MRK.DE",
+	"LIN.DE",
+	"ALV.DE",
+	"VNA.DE",
+	"EOAN.DE",
+	"HEN3.DE",
+	"DAI.DE",
+	"DB1.DE",
+	"DPW.DE",
+	"DWNI.DE",
+	"BMW.DE",
+	"DTE.DE",
+	"VOW3.DE",
+	"MUV2.DE",
+	"1COV.DE",
+	"SAP.DE",
+	"FME.DE",
+	"BAS.DE",
+	"BAYN.DE",
+	"BEI.DE",
+	"CON.DE",
+	"SIE.DE",
+	"ADS.DE",
+	"HEI.DE",
+	"DBK.DE",
 	"IFX.DE"
 ]
 
