@@ -104,18 +104,8 @@ class FeatureEngineer:
         # df['return_lag_2']=df.close.pct_change(3)
         # df['return_lag_3']=df.close.pct_change(4)
         # df['return_lag_4']=df.close.pct_change(5)
-        df = self._add_news_sentiment(df)
         return df
 
-    def _add_news_sentiment(self, stocks_df):
-        news_sentiment_df_path = config.NEWS_DATA_PATH
-        with open(news_sentiment_df_path, 'rb') as f:
-            articles_df = pickle.load(f)
-        sentiment_df = self.get_aggregate_sentiment_df(articles_df)
-        print('sentiment_df')
-        print(sentiment_df)
-        final_df = pd.merge(stocks_df, sentiment_df, how='left', on='date')
-        return final_df
 
     def get_aggregate_sentiment_df(self, articles_df):
         relevant_articles_df = articles_df.groupby(['date', 'category'], as_index=False)[['magnitude', 'score']].mean()

@@ -18,7 +18,7 @@ from stable_baselines3.common.noise import (
 )
 
 from finrl.config import config
-from finrl.preprocessing.data import data_split
+from finrl.preprocessing.data import data_split, daily_feature_data_split
 from finrl.env.env_stocktrading import StockTradingEnv
 
 from stable_baselines3 import A2C
@@ -176,7 +176,7 @@ class DRLEnsembleAgent:
                 train_period,val_test_period,
                 rebalance_window, validation_window,
                 stock_dim,
-                hmax,                
+                hmax,
                 initial_amount,
                 buy_cost_pct,
                 sell_cost_pct,
@@ -184,7 +184,8 @@ class DRLEnsembleAgent:
                 state_space,
                 action_space,
                 tech_indicator_list,
-                print_verbosity):
+                print_verbosity,
+                daily_features=None):
 
         self.df=df
         self.train_period = train_period
@@ -204,6 +205,7 @@ class DRLEnsembleAgent:
         self.action_space = action_space
         self.tech_indicator_list = tech_indicator_list
         self.print_verbosity = print_verbosity
+        self.daily_features = daily_features
 
 
     def DRL_validation(self, model, test_data, test_env, test_obs):
@@ -217,6 +219,7 @@ class DRLEnsembleAgent:
 
         ## trading env
         trade_data = data_split(self.df, start=self.unique_trade_date[iter_num - self.rebalance_window], end=self.unique_trade_date[iter_num])
+
         trade_env = DummyVecEnv([lambda: StockTradingEnv(trade_data,
                                                         self.stock_dim,
                                                         self.hmax,
@@ -233,6 +236,7 @@ class DRLEnsembleAgent:
                                                         model_name=name,
                                                         mode='trade',
                                                         iteration=iter_num,
+                                                        daily_features=self.daily_features,
                                                         print_verbosity=self.print_verbosity)])
 
         trade_obs = trade_env.reset()
@@ -313,6 +317,7 @@ class DRLEnsembleAgent:
             ############## Environment Setup starts ##############
             ## training env
             train = data_split(self.df, start=self.train_period[0], end=self.unique_trade_date[i - self.rebalance_window - self.validation_window])
+            relevant_daily_feature_data = daily_feature_data_split(self.daily_features, start=self.train_period[0], end=self.unique_trade_date[i - self.rebalance_window - self.validation_window])
             self.train_env = DummyVecEnv([lambda: StockTradingEnv(train,
                                                                 self.stock_dim,
                                                                 self.hmax,
@@ -323,6 +328,7 @@ class DRLEnsembleAgent:
                                                                 self.state_space,
                                                                 self.action_space,
                                                                 self.tech_indicator_list,
+                                                                daily_features=relevant_daily_feature_data,
                                                                 print_verbosity=self.print_verbosity)])
 
             validation = data_split(self.df, start=self.unique_trade_date[i - self.rebalance_window - self.validation_window],
@@ -353,6 +359,7 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='A2C',
                                                                 mode='validation',
+                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_a2c = val_env_a2c.reset()
             self.DRL_validation(model=model_a2c,test_data=validation,test_env=val_env_a2c,test_obs=val_obs_a2c)
@@ -377,6 +384,7 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='PPO',
                                                                 mode='validation',
+                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_ppo = val_env_ppo.reset()
             self.DRL_validation(model=model_ppo,test_data=validation,test_env=val_env_ppo,test_obs=val_obs_ppo)
@@ -401,6 +409,7 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='DDPG',
                                                                 mode='validation',
+                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_ddpg = val_env_ddpg.reset()
             self.DRL_validation(model=model_ddpg,test_data=validation,test_env=val_env_ddpg,test_obs=val_obs_ddpg)
@@ -424,6 +433,7 @@ class DRLEnsembleAgent:
                                                                 self.state_space,
                                                                 self.action_space,
                                                                 self.tech_indicator_list,
+                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             # Model Selection based on sharpe ratio
             if (sharpe_ppo >= sharpe_a2c) & (sharpe_ppo >= sharpe_ddpg):
@@ -460,7 +470,3 @@ class DRLEnsembleAgent:
         df_summary.columns = ['Iter','Val Start','Val End','Model Used','A2C Sharpe','PPO Sharpe','DDPG Sharpe']
 
         return df_summary
-
-
-
-

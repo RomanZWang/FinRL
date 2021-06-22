@@ -31,10 +31,10 @@ RESULTS_DIR = f"results"
 
 
 ## time_fmt = '%Y-%m-%d'
-START_DATE = "2000-01-01"
-END_DATE = "2021-01-01"
+START_DATE = "2004-08-11"
+END_DATE = "2021-06-11"
 
-START_TRADE_DATE = "2019-01-01"
+START_TRADE_DATE = "2016-01-01"
 
 ## dataset default columns
 DEFAULT_DATA_COLUMNS = ["date", "tic", "close"]
@@ -47,8 +47,10 @@ TECHNICAL_INDICATORS_LIST = ["macd","boll_ub","boll_lb","rsi_30", "cci_30", "dx_
 # Sentiment Data
 # 6 news categories
 # 2 scores
-NEWS_DATA_PATH = '/home/roman/Work/trading-bot/notebooks/article_df_sentiment_11.pkl'
-NUMBER_OF_USER_FEATURES = 6*2
+NEWS_DATA_PATH = '/home/roman/Work/trading-bot/notebooks/2004-2018_sentiment_final.pkl'
+# NUMBER_OF_USER_FEATURES = 6*2
+NUMBER_OF_USER_FEATURES = 0
+NUMBER_OF_DAILY_FEATURES = 12
 
 ## Model Parameters
 A2C_PARAMS = {"n_steps": 5, "ent_coef": 0.01, "learning_rate": 0.0007}
@@ -135,6 +137,35 @@ DOW_30_TICKER = [
     "WBA",
     "DD",
 ]
+
+MISSING = ["PG",
+"DIS",
+"HD",
+"IBM",
+"UNH",
+"KO",
+"JNJ",
+"MCD",
+"CSCO",
+"BA",
+"PFE",
+"DD",
+"V"]
+
+MISSING2 = [
+'PG',
+'UNH',
+'CSCO',
+'PFE',
+'V'
+]
+
+MISSING3 = [
+'PG',
+'CSCO',
+'V'
+]
+
 
 # Nasdaq 100 constituents at 2019/01
 NAS_100_TICKER = [
