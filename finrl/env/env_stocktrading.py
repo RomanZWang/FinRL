@@ -34,7 +34,8 @@ class StockTradingEnv(gym.Env):
                 previous_state=[],
                 model_name = '',
                 mode='',
-                iteration=''):
+                iteration='',
+                daily_features=None):
         self.day = day
         self.df = df
         self.stock_dim = stock_dim
@@ -61,6 +62,7 @@ class StockTradingEnv(gym.Env):
         self.iteration=iteration
         # initalize state
         self.state = self._initiate_state()
+        self.daily_features = daily_features
 
         # initialize reward
         self.reward = 0
@@ -263,7 +265,6 @@ class StockTradingEnv(gym.Env):
     def reset(self):
         #initiate state
         self.state = self._initiate_state()
-
         if self.initial:
             self.asset_memory = [self.initial_amount]
         else:
@@ -298,14 +299,14 @@ class StockTradingEnv(gym.Env):
                          self.data.close.values.tolist() + \
                          [0]*self.stock_dim  + \
                          sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list ], []) + \
-                         [0] * self.user_features_dim
+                         [0] * config.NUMBER_OF_DAILY_FEATURES
             else:
                 # for single stock
                 state = [self.initial_amount] + \
                         [self.data.close] + \
                         [0]*self.stock_dim  + \
                         sum([[self.data[tech]] for tech in self.tech_indicator_list ], []) + \
-                        [0] * self.user_features_dim
+                        [0] * config.NUMBER_OF_DAILY_FEATURES
         else:
             #Using Previous State
             if len(self.df.tic.unique())>1:
@@ -314,14 +315,14 @@ class StockTradingEnv(gym.Env):
                          self.data.close.values.tolist() + \
                          self.previous_state[(self.stock_dim+1):(self.stock_dim*2+1)]  + \
                          sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list ], []) + \
-                         [0] * self.user_features_dim
+                         [0] * config.NUMBER_OF_DAILY_FEATURES
             else:
                 # for single stock
                 state = [self.previous_state[0]] + \
                         [self.data.close] + \
                         self.previous_state[(self.stock_dim+1):(self.stock_dim*2+1)]  + \
                         sum([[self.data[tech]] for tech in self.tech_indicator_list ], []) + \
-                        [0] * self.user_features_dim
+                        [0] * config.NUMBER_OF_DAILY_FEATURES
         return state
 
     def _update_state(self):
@@ -329,7 +330,6 @@ class StockTradingEnv(gym.Env):
         # print(self.data.close.values.tolist())
         # print(list(self.state[(self.stock_dim+1):(self.stock_dim*2+1)]))
         # print(sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list ], []) )
-        user_features_columns = self.data.columns[-config.NUMBER_OF_USER_FEATURES:]
         # print(self.data[user_features_columns].values[0])
         if len(self.df.tic.unique())>1:
             # for multiple stock
@@ -337,16 +337,14 @@ class StockTradingEnv(gym.Env):
                       self.data.close.values.tolist() + \
                       list(self.state[(self.stock_dim+1):(self.stock_dim*2+1)]) + \
                       sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list ], []) + \
-                      list(self.data[user_features_columns].values[0]) # News sentiment. We needed to append to end of stock df and have the same values across different stocks on the same day. We need to pass in separate sentiment df in the future.
-
+                      self.daily_features.drop('date', axis=1).loc[self.day,:].tolist()
         else:
             # for single stock
             state =  [self.state[0]] + \
                      [self.data.close] + \
                      list(self.state[(self.stock_dim+1):(self.stock_dim*2+1)]) + \
                      sum([[self.data[tech]] for tech in self.tech_indicator_list ], []) + \
-                     list(self.data[user_features_columns].values[0]) # News sentiment. We needed to append to end of stock df and have the same values across different stocks on the same day. We need to pass in separate sentiment df in the future.
-
+                     self.daily_features.drop('date', axis=1).loc[self.day,:].tolist()
         # print(state)
         return state
 
