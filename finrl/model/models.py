@@ -251,7 +251,7 @@ class DRLEnsembleAgent:
         df_last_state.to_csv('results/last_state_{}_{}.csv'.format(name, i), index=False)
         return last_state
 
-    def run_ensemble_strategy(self,A2C_model_kwargs, A2C_model_kwargs2, PPO_model_kwargs, PPO_model_kwargs2, DDPG_model_kwargs, DDPG_model_kwargs2, timesteps_dict):
+    def run_ensemble_strategy(self,A2C_model_kwargs, PPO_model_kwargs, DDPG_model_kwargs, timesteps_dict):
         """Ensemble Strategy that combines PPO, A2C and DDPG"""
         print("============Start Ensemble Strategy============")
         # for ensemble model, it's necessary to feed the last state
