@@ -18,7 +18,7 @@ from stable_baselines3.common.noise import (
 )
 
 from finrl.config import config
-from finrl.preprocessing.data import data_split, daily_feature_data_split
+from finrl.preprocessing.data import data_split
 from finrl.env.env_stocktrading import StockTradingEnv
 
 from stable_baselines3 import A2C
@@ -320,7 +320,6 @@ class DRLEnsembleAgent:
             ############## Environment Setup starts ##############
             ## training env
             train = data_split(self.df, start=self.train_period[0], end=self.unique_trade_date[i - self.rebalance_window - self.validation_window])
-            relevant_daily_feature_data = daily_feature_data_split(self.daily_features, start=self.train_period[0], end=self.unique_trade_date[i - self.rebalance_window - self.validation_window])
             self.train_env = DummyVecEnv([lambda: StockTradingEnv(train,
                                                                 self.stock_dim,
                                                                 self.hmax,
@@ -331,7 +330,6 @@ class DRLEnsembleAgent:
                                                                 self.state_space,
                                                                 self.action_space,
                                                                 self.tech_indicator_list,
-                                                                daily_features=relevant_daily_feature_data,
                                                                 print_verbosity=self.print_verbosity)])
 
             validation = data_split(self.df, start=self.unique_trade_date[i - self.rebalance_window - self.validation_window],
@@ -362,7 +360,6 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='A2C',
                                                                 mode='validation',
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_a2c = val_env_a2c.reset()
             self.DRL_validation(model=model_a2c,test_data=validation,test_env=val_env_a2c,test_obs=val_obs_a2c)
@@ -388,7 +385,6 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='A2C2',
                                                                 mode='validation',
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_a2c2 = val_env_a2c2.reset()
             self.DRL_validation(model=model_a2c2,test_data=validation,test_env=val_env_a2c2,test_obs=val_obs_a2c2)
@@ -413,7 +409,6 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='PPO',
                                                                 mode='validation',
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_ppo = val_env_ppo.reset()
             self.DRL_validation(model=model_ppo,test_data=validation,test_env=val_env_ppo,test_obs=val_obs_ppo)
@@ -438,7 +433,6 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='PPO2',
                                                                 mode='validation',
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_ppo2 = val_env_ppo2.reset()
             self.DRL_validation(model=model_ppo2,test_data=validation,test_env=val_env_ppo2,test_obs=val_obs_ppo2)
@@ -463,7 +457,6 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='DDPG',
                                                                 mode='validation',
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_ddpg = val_env_ddpg.reset()
             self.DRL_validation(model=model_ddpg,test_data=validation,test_env=val_env_ddpg,test_obs=val_obs_ddpg)
@@ -487,7 +480,6 @@ class DRLEnsembleAgent:
                                                                 iteration=i,
                                                                 model_name='DDPG2',
                                                                 mode='validation',
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
             val_obs_ddpg2 = val_env_ddpg2.reset()
             self.DRL_validation(model=model_ddpg2,test_data=validation,test_env=val_env_ddpg2,test_obs=val_obs_ddpg2)

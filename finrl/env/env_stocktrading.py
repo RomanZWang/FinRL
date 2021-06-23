@@ -336,15 +336,13 @@ class StockTradingEnv(gym.Env):
             state =  [self.state[0]] + \
                       self.data.close.values.tolist() + \
                       list(self.state[(self.stock_dim+1):(self.stock_dim*2+1)]) + \
-                      sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list ], []) + \
-                      self.daily_features.drop('date', axis=1).loc[self.day,:].tolist()
+                      sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list ], [])
         else:
             # for single stock
             state =  [self.state[0]] + \
                      [self.data.close] + \
                      list(self.state[(self.stock_dim+1):(self.stock_dim*2+1)]) + \
-                     sum([[self.data[tech]] for tech in self.tech_indicator_list ], []) + \
-                     self.daily_features.drop('date', axis=1).loc[self.day,:].tolist()
+                     sum([[self.data[tech]] for tech in self.tech_indicator_list ], [])
         # print(state)
         return state
 
