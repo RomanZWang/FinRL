@@ -33,7 +33,7 @@ from stable_baselines3.common.noise import (
 from stable_baselines3 import SAC
 
 
-MODELS = {"a2c": A2C, "ddpg": DDPG, "td3": TD3, "sac": SAC, "ppo": PPO}
+MODELS = {"a2c": A2C, "a2c2": A2C, "ddpg": DDPG, "ddpg2": DDPG, "td3": TD3, "sac": SAC, "ppo": PPO, "ppo2": PPO}
 
 MODEL_KWARGS = {x: config.__dict__[f"{x.upper()}_PARAMS"] for x in MODELS.keys()}
 
