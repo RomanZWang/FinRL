@@ -236,7 +236,6 @@ class DRLEnsembleAgent:
                                                         model_name=name,
                                                         mode='trade',
                                                         iteration=iter_num,
-                                                        daily_features=self.daily_features,
                                                         print_verbosity=self.print_verbosity)])
 
         trade_obs = trade_env.reset()
@@ -506,7 +505,6 @@ class DRLEnsembleAgent:
                                                                 self.state_space,
                                                                 self.action_space,
                                                                 self.tech_indicator_list,
-                                                                daily_features=self.daily_features,
                                                                 print_verbosity=self.print_verbosity)])
 
             decider_dict = {

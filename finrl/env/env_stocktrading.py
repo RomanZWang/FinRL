@@ -185,6 +185,7 @@ class StockTradingEnv(gym.Env):
             if df_total_value['daily_return'].std() !=0:
                 sharpe = (252**0.5)*df_total_value['daily_return'].mean()/ \
                       df_total_value['daily_return'].std()
+                tot_reward+=sharpe     
             df_rewards = pd.DataFrame(self.rewards_memory)
             df_rewards.columns = ['account_rewards']
             df_rewards['date'] = self.date_memory[:-1]
