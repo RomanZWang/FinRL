@@ -50,7 +50,7 @@ TECHNICAL_INDICATORS_LIST = ["macd","boll_ub","boll_lb","rsi_30", "cci_30", "dx_
 NEWS_DATA_PATH = '/home/roman/Work/trading-bot/notebooks/2004-2018_sentiment_final.pkl'
 # NUMBER_OF_USER_FEATURES = 6*2
 NUMBER_OF_USER_FEATURES = 0
-NUMBER_OF_DAILY_FEATURES = 12
+NUMBER_OF_DAILY_FEATURES = 300
 
 ## Model Parameters
 A2C_PARAMS = {"n_steps": 5, "ent_coef": 0.01, "learning_rate": 0.0007}
